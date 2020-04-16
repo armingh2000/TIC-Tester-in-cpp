@@ -2,16 +2,16 @@ list of TODOs:
     main.c :
         linking and handling the whole proccess
 
-    FileHandler.c :
+    FileHandler :
         reads input....txt and output....txt
 
-    ProgramHandler.c :
+    ProgramHandler :
         finds program and gives it input and recieves output of it
 
-    MakeLog.c :
+    MakeLog :
         finds whether or not output matches as expected and gives full logs
 
-    test.c :
+    test :
         testing functions during implementations
 
     Makefile:
