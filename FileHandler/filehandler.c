@@ -2,7 +2,14 @@
 #include <stdlib.h>
 #include <dirent.h>
 
-// reads input file and return a 
+// reads input file and return a char ** 
+// each for each line in input file
+//
+// gets absolut/relative input file path
+// and a pointer to line numbers in it
+// 
+// line numbers will be set to ln after
+// reading is finished
 char ** read_input(char * file_path, int * ln)
 {
     FILE * input_file = fopen(file_path, "r");
@@ -10,12 +17,12 @@ char ** read_input(char * file_path, int * ln)
     char ** inp = malloc(sizeof(*inp));
     char * line = NULL;
     size_t sz;
-    int lines_number= 0;
+    *ln = 0;
     while(getline(&line, &sz, input_file) >= 0)
     {
-        lines_number++;
-        inp = realloc(inp, lines_number * sizeof(*inp));
-        inp[lines_number - 1] = line;
+        *ln++;
+        inp = realloc(inp, *ln * sizeof(*inp));
+        inp[*ln - 1] = line;
         line = NULL;
     }
     free(line);
