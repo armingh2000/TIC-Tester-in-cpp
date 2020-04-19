@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <dirent.h>
+#include <string.h>
 
 // reads input file and return a char ** 
 // each for each line in input file
@@ -17,16 +18,22 @@ char ** read_input(char * file_path, int * ln)
     char ** inp = malloc(sizeof(*inp));
     char * line = NULL;
     size_t sz;
-    *ln = 0;
+    int line_num = 0;
+    char * n_pos = NULL;
     while(getline(&line, &sz, input_file) >= 0)
     {
-        *ln++;
-        inp = realloc(inp, *ln * sizeof(*inp));
-        inp[*ln - 1] = line;
+        line_num++;
+        inp = realloc(inp, line_num * sizeof(*inp));
+        if((n_pos = strchr(line, '\n')) != NULL)
+        {
+            *n_pos = '\0';
+        }
+        inp[line_num - 1] = line;
         line = NULL;
     }
     free(line);
     fclose(input_file);
+    *ln = line_num;
     return inp;
 }
 
