@@ -7,8 +7,8 @@ test : test.o filehandler.o
 test.o : test.c 
 	gcc -o test.o -c test.c $(CFLAGS)
 
-filehandler.o : ..\FileHandler\filehandler.c
-	gcc -o filehandler.o -c ..\FileHandler\filehandler.c $(CFLAGS)
+filehandler.o : ../FileHandler/filehandler.c
+	gcc -o filehandler.o -c ../FileHandler/filehandler.c $(CFLAGS)
 
 clean:
 	rm *.o	
