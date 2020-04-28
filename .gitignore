@@ -387,3 +387,10 @@ healthchecksdb
 MigrationBackup/
 
 # End of https://www.gitignore.io/api/vim,visualstudio,visualstudiocode
+
+# ignoring null file
+nul
+
+# test & test-result
+test
+test-result.txt
