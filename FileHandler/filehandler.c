@@ -11,16 +11,17 @@
 // 
 // line numbers will be set to ln after
 // reading is finished
+
 char ** read_file(char * file_path, int * ln)
 {
     FILE * input_file = fopen(file_path, "r");
     if(input_file == NULL) { fprintf(stderr, "input_file %s, not found", file_path); exit(EXIT_FAILURE);}
     char ** inp = malloc(sizeof(*inp));
     char * line = NULL;
-    size_t sz;
+    size_t line_sz;
     int line_num = 0;
     char * n_pos = NULL;
-    while(getline(&line, &sz, input_file) >= 0)
+    while(getline(&line, &line_sz, input_file) >= 0)
     {
         line_num++;
         inp = realloc(inp, line_num * sizeof(*inp));
@@ -43,8 +44,10 @@ char ** read_file(char * file_path, int * ln)
     return inp;
 }
 
+// frees space used for read_file result
 void free_read_file(char ** read_file, int line_num)
 {
+    // if file is empty -> do nothing
     if(read_file == NULL)
         return;
     for(int i = 0; i < line_num; i++)
