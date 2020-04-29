@@ -12,3 +12,6 @@ filehandler.o : ../FileHandler/filehandler.c
 
 clean:
 	rm *.o	
+
+test-result:
+	./test > test-result.txt
