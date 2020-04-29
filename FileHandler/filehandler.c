@@ -11,7 +11,7 @@
 // 
 // line numbers will be set to ln after
 // reading is finished
-char ** read_input(char * file_path, int * ln)
+char ** read_file(char * file_path, int * ln)
 {
     FILE * input_file = fopen(file_path, "r");
     if(input_file == NULL) { fprintf(stderr, "input_file %s, not found", file_path); exit(EXIT_FAILURE);}
@@ -24,15 +24,16 @@ char ** read_input(char * file_path, int * ln)
     {
         line_num++;
         inp = realloc(inp, line_num * sizeof(*inp));
-        if((n_pos = strchr(line, '\n')) != NULL)
-        {
+        if((n_pos = strchr(line, '\r')) != NULL)
             *n_pos = '\0';
-        }
         inp[line_num - 1] = line;
         line = NULL;
+        n_pos = NULL;
     }
     free(line);
     fclose(input_file);
+    if(n_pos != NULL)
+        free(n_pos);
     *ln = line_num;
     return inp;
 }
