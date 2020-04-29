@@ -8,8 +8,6 @@
 
 void read_file_test()
 {
-    fprintf(stdout, "starting filehandler.c->read_file_test\n");
-
     // test 1
     char fp1[] = { "./tests_dir/In_1.txt" }; 
     int fln1 = 0;
@@ -28,13 +26,10 @@ void read_file_test()
     char ** test2 = read_file(fp2, &fln2);
     assert(test2 == NULL);
     free_read_file(test2, fln2);
-
-    fprintf(stdout, "%s\n", "*test successfully finished*");
 }
 
 void free_read_file_test()
 {
-    fprintf(stdout, "starting filehandler.c->read_file_test\n");
 
     // test 1
     char fp1[] = { "./tests_dir/In_1.txt" }; 
@@ -42,13 +37,26 @@ void free_read_file_test()
     char ** test1 = read_file(fp1, &fln1);
     free_read_file(test1, fln1);
 
-    fprintf(stdout, "%s\n", "*test successfully finished*");
+    // test 2
+    char fp2[] = { "./tests_dir/In_2.txt" }; 
+    int fln2 = 0;
+    char ** test2 = read_file(fp2, &fln2);
+    free_read_file(test2, fln2);
+
 }
 
 int main(int argc, char ** argv)
 {
+    fprintf(stdout, "Two options availabe :\n");
+    fprintf(stdout, "   1- run all tests\n");
+    fprintf(stdout, "   2- run specific tests one by one with your selevtion\n");
+    fprintf(stdout, "   3- run specific tests with name (Not implemented yet)\n");
+    fprintf(stdout, "Which option do you want (1, 2, 3): ");
+    char * opt = NULL;
+    size_t opt_size;
+    getline(&opt, &opt_size, stdin);
 
-    if(argc == 1)
+    if(*opt == '1')
     {
     // FileHandler tests
     
@@ -59,30 +67,33 @@ int main(int argc, char ** argv)
     free_read_file_test();
 
     }
-    else
+    else if(*opt == '2')
     {
-        if(strcmp(argv[1], "focused") != 0)
-            fprintf(stderr, "Option invalid; Either leave it empty or write focused");
-
+        fprintf(stdout, "If you want to run a test write y, everything else will be considered as no\n\n");
         int func_nums = 2;
         char * func_names[] = { "read_file", "free_read_file" };
         void (*funcs[])() = { &read_file_test, &free_read_file_test };
         char * line = NULL;
-        size_t sz;
+        size_t line_sz;
 
         for(int i = 0; i < func_nums; i++)
         {
-            printf("Do you want to run '%s' test?", func_names[i]);
-            if(getline(&line, &sz, stdin) > 0)
+            fprintf(stdout, "Do you want to run '%s_test' test?", func_names[i]);
+            getline(&line, &line_sz, stdin);
+
+            if(strcmp(line, "y\n") == 0)
             {
-                if(strcmp(line, "\n") == 0)
-                {
-                    (*(funcs[i]))();
-                }
-                else
-                    continue;
+                fprintf(stdout, "\tstarting '%s_test'\n", func_names[i]);
+                (*(funcs[i]))();
+                fprintf(stdout, "\t\t*test successfully finished*\n\n");
+            }
+            else
+            {
+                fprintf(stdout, "Test '%s_test' didn't run\n\n", func_names[i]);
+                continue;
             }
         }
+
         free(line);
     }
 
