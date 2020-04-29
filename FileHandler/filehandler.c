@@ -36,8 +36,22 @@ char ** read_file(char * file_path, int * ln)
         free(n_pos);
     *ln = line_num;
     if(*ln == 0)
+    {
+        free(inp);
         return NULL;
+    }
     return inp;
+}
+
+void free_read_file(char ** read_file, int line_num)
+{
+    if(read_file == NULL)
+        return;
+    for(int i = 0; i < line_num; i++)
+    {
+        free(read_file[i]);
+    }
+    free(read_file);
 }
 
 
