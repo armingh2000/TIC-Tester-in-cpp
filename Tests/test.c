@@ -47,6 +47,7 @@ void free_read_file_test()
 
 int main(int argc, char ** argv)
 {
+
     if(argc == 1)
     {
     // FileHandler tests
