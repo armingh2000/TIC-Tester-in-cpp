@@ -35,6 +35,8 @@ char ** read_file(char * file_path, int * ln)
     if(n_pos != NULL)
         free(n_pos);
     *ln = line_num;
+    if(*ln == 0)
+        return NULL;
     return inp;
 }
 
