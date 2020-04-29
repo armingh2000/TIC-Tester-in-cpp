@@ -16,3 +16,6 @@ list of TODOs:
 
     Makefile:
         good Makefile for linking all these and deleting unwanted .o files
+
+    Comments :
+        Comment functions
