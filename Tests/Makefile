@@ -1,7 +1,7 @@
 CFLAGS=-ggdb3 -Wall -Werror -pedantic -std=gnu99
 
-test : test.o filehandler.o
-	gcc -o test $(CFLAGS) test.o filehandler.o
+test : test.o filehandler.o programhandler.o
+	gcc -o test $(CFLAGS) test.o filehandler.o programhandler.o
 	make clean
 
 test.o : test.c 
@@ -9,6 +9,9 @@ test.o : test.c
 
 filehandler.o : ../FileHandler/filehandler.c
 	gcc -o filehandler.o -c ../FileHandler/filehandler.c $(CFLAGS)
+
+programhandler.o : ../ProgramHandler/programhandler.c
+	gcc -o programhandler.o -c ../ProgramHandler/programhandler.c $(CFLAGS)
 
 clean:
 	rm *.o	

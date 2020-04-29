@@ -4,6 +4,7 @@
 #include <string.h>
 #include "../FileHandler/filehandler.h"
 #include "test.h"
+#include "../ProgramHandler/programhandler.h"
 
 
 void read_file_test()
@@ -45,6 +46,17 @@ void free_read_file_test()
 
 }
 
+void find_file_extension_test()
+{
+    // test 1
+    char fp1[] = { "./tests_dir/prog1.c" }; 
+    assert(find_file_extension(fp1) == C);
+
+    char fp2[] = { "./tests_dir/prog2.F" };
+    assert(find_file_extension(fp2) == NOT_SUPPORTED);
+
+}
+
 int main(int argc, char ** argv)
 {
     fprintf(stdout, "Two options availabe :\n");
@@ -58,21 +70,27 @@ int main(int argc, char ** argv)
 
     if(*opt == '1')
     {
-    // FileHandler tests
-    
-    // read_file
-    read_file_test();
+        int func_nums = 3;
+        char * func_names[] = { "read_file", "free_read_file", 
+            "find_file_extension" };
+        void (*funcs[])() = { &read_file_test, &free_read_file_test,
+            &find_file_extension_test };
 
-    // free_read_file_test
-    free_read_file_test();
-
+        for(int i = 0; i < func_nums; i++)
+        {
+            fprintf(stdout, "\tstarting '%s_test'\n", func_names[i]);
+            (*(funcs[i]))();
+            fprintf(stdout, "\t\t*test successfully finished*\n\n");
+        }
     }
     else if(*opt == '2')
     {
         fprintf(stdout, "If you want to run a test write y, everything else will be considered as no\n\n");
-        int func_nums = 2;
-        char * func_names[] = { "read_file", "free_read_file" };
-        void (*funcs[])() = { &read_file_test, &free_read_file_test };
+        int func_nums = 3;
+        char * func_names[] = { "read_file", "free_read_file", 
+            "find_file_extension" };
+        void (*funcs[])() = { &read_file_test, &free_read_file_test,
+            &find_file_extension_test };
         char * line = NULL;
         size_t line_sz;
 
