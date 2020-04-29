@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <string.h>
+#include "filehandler.h"
 
 // reads input file and return a char ** 
 // each for each line in input file

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
-#include "filehandler.h"
+#include "../FileHandler/filehandler.h"
 #include "test.h"
 
 
@@ -89,7 +89,7 @@ int main(int argc, char ** argv)
             }
             else
             {
-                fprintf(stdout, "Test '%s_test' didn't run\n\n", func_names[i]);
+                fprintf(stdout, "\t--Test '%s_test' didn't run--\n\n", func_names[i]);
                 continue;
             }
         }
