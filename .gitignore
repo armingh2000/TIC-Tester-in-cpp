@@ -390,3 +390,7 @@ MigrationBackup/
 
 # ignoring null file
 nul
+
+# test & test-result
+test
+test-result.txt
