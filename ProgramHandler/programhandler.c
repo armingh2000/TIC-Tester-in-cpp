@@ -8,7 +8,7 @@
 prog_extn find_file_extension(char * file_name)
 {
     char * point_place = strrchr(file_name, '.');
-    if(strcmp(point_place, "c") == 0)
+    if(strcmp(point_place, ".c") == 0)
         return C;
 
     else if(strcmp(point_place, ".cpp") == 0)
