@@ -30,3 +30,18 @@ prog_extn find_file_extension(char * file_name)
         return NOT_SUPPORTED;
 }
 
+char * get_program_stdout(char * program_path, prog_extn ext)
+{
+    char * res;
+    switch(ext)
+    {
+        case PYTHON:
+            res = handle_python_program(program_path);
+            break;
+        default:
+            return;
+    }
+}
+
+
+
