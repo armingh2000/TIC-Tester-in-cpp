@@ -37,7 +37,7 @@ prog_extn find_file_extension(char * file_name)
 char * get_program_stdout(char * program_path, prog_extn ext, 
         char * input)
 {
-    char * res;
+    char * res = "";
     switch(ext)
     {
         case PYTHON:
@@ -46,11 +46,12 @@ char * get_program_stdout(char * program_path, prog_extn ext,
         default:
             return res;
     }
+    return res;
 }
 
 char * handle_python_program(char * program_path, char * input)
 {
-    fprintf(stdout, "Getting program results");
+    fprintf(stdout, "Getting program results\n");
     pid_t pid = 0; 
     int inpipefd[2];
     int outpipefd[2];
@@ -61,34 +62,27 @@ char * handle_python_program(char * program_path, char * input)
     if(pid < 0){ fprintf(stdout, "Forking failed"); exit(EXIT_FAILURE); }
     else if(pid == 0)
     {
-        close(outpipefd[1]);
-        close(inpipefd[0]);
         // Child
         dup2(outpipefd[0], STDIN_FILENO);
         dup2(inpipefd[1], STDOUT_FILENO);
 
-        execl(program_path, NULL);
+        execl("python3", program_path, (char *) NULL);
 
-        exit(EXIT_SUCCESS);
+        exit(EXIT_FAILURE);
     }
 
     close(outpipefd[0]);
     close(inpipefd[1]);
     
     write(outpipefd[1], input, strlen(input));
-    char * res = malloc(sizeof(*res));
-    char * line = NULL;
-    size_t line_sz;
+    wait(NULL);
+    char * res = malloc(BUFSIZ * sizeof(*res));
     
-    FILE * inpipefd_ptr = fdopen(inpipefd[0], "r");
-    while(getline(&line, &line_sz,inpipefd_ptr) > 0)
-    {
-        strcat(res, line);
-        line = NULL;
-    } 
-    free(inpipefd_ptr);
+    read(inpipefd[0], &res, BUFSIZ);
+
     close(outpipefd[1]);
     close(inpipefd[0]);
+    kill(pid, SIGKILL);
 
     return res;
 }
