@@ -49,6 +49,11 @@ FILE * get_program_file_popen(char * program_path, prog_extn ext)
     }
 }
 
+void free_program_file_popen(FILE * p)
+{
+    pclose(p);
+}
+
 void give_std_input(FILE * program, char ** stdinp, int line_num)
 {
     
