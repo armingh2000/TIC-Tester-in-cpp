@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "programhandler.h"
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/prctl.h>
+#include <signal.h>
 
 // returns an int that represents the
 // extension of the program file
@@ -30,18 +34,63 @@ prog_extn find_file_extension(char * file_name)
         return NOT_SUPPORTED;
 }
 
-char * get_program_stdout(char * program_path, prog_extn ext)
+char * get_program_stdout(char * program_path, prog_extn ext, 
+        char * input)
 {
     char * res;
     switch(ext)
     {
         case PYTHON:
-            res = handle_python_program(program_path);
+            res = handle_python_program(program_path, input);
             break;
         default:
-            return;
+            return res;
     }
 }
 
+char * handle_python_program(char * program_path, char * input)
+{
+    fprintf(stdout, "Getting program results");
+    pid_t pid = 0; 
+    int inpipefd[2];
+    int outpipefd[2];
+    pipe(inpipefd);
+    pipe(outpipefd);
+    pid = fork();
+
+    if(pid < 0){ fprintf(stdout, "Forking failed"); exit(EXIT_FAILURE); }
+    else if(pid == 0)
+    {
+        close(outpipefd[1]);
+        close(inpipefd[0]);
+        // Child
+        dup2(outpipefd[0], STDIN_FILENO);
+        dup2(inpipefd[1], STDOUT_FILENO);
+
+        execl(program_path, NULL);
+
+        exit(EXIT_SUCCESS);
+    }
+
+    close(outpipefd[0]);
+    close(inpipefd[1]);
+    
+    write(outpipefd[1], input, strlen(input));
+    char * res = malloc(sizeof(*res));
+    char * line = NULL;
+    size_t line_sz;
+    
+    FILE * inpipefd_ptr = fdopen(inpipefd[0], "r");
+    while(getline(&line, &line_sz,inpipefd_ptr) > 0)
+    {
+        strcat(res, line);
+        line = NULL;
+    } 
+    free(inpipefd_ptr);
+    close(outpipefd[1]);
+    close(inpipefd[0]);
+
+    return res;
+}
 
 
