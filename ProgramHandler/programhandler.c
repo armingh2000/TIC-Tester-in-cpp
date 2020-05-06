@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "programhandler.h"
+#include <unistd.h>
+#include <sys/wait.h>
 
 // returns an int that represents the
 // extension of the program file
@@ -30,32 +32,72 @@ prog_extn find_file_extension(char * file_name)
         return NOT_SUPPORTED;
 }
 
-FILE * get_program_file_popen(char * program_path, prog_extn ext)
+char * get_program_stdout(char * program_path, prog_extn ext, 
+        char * input)
 {
+    char * res = "";
     switch(ext)
     {
         case PYTHON:
-            ;
-            char * run_command = { "python3 " };
-            run_command = strcat(run_command, program_path);
-
-            FILE * fp = popen(run_command, "w");
-            if(fp == NULL) { fprintf(stderr, "File at path '%s' not found", program_path); exit(EXIT_FAILURE); }
-            
-            return fp;
+            res = handle_python_program(program_path, input);
             break;
         default:
-            return NULL;
+            return res;
     }
+    return res;
 }
 
-void free_program_file_popen(FILE * p)
+char * handle_python_program(char * program_path, char * input)
 {
-    pclose(p);
-}
+    fprintf(stdout, "Getting program results\n");
+    pid_t pid; 
+    int inpipefd[2];
+    int outpipefd[2];
+    pipe(inpipefd);
+    pipe(outpipefd);
+    pid = fork();
 
-void give_std_input(FILE * program, char ** stdinp, int line_num)
-{
+    if(pid < 0){ fprintf(stdout, "Forking failed"); exit(EXIT_FAILURE); }
+
+    else if(pid == 0)
+    {
+        // Child
+        close(inpipefd[1]);
+        close(outpipefd[0]);
+        dup2(outpipefd[1], STDOUT_FILENO);
+        dup2(inpipefd[0], STDIN_FILENO);
+        waitpid(inpipefd[0], NULL, 0);
+
+        execlp("python3", "python3", program_path, NULL);
+
+        exit(EXIT_SUCCESS);
+    }
+
+    close(outpipefd[1]);
+    close(inpipefd[0]);
     
+    write(inpipefd[1], input, strlen(input) + 1);
+    close(inpipefd[1]);
+    waitpid(pid, NULL, 0);
+
+    char * res = malloc(sizeof(*res));
+    char c;
+    int i = 0;
+    
+    while(read(outpipefd[0], &c, 1) > 0)
+    {
+        if(c == '\r')
+            c = '\n';
+        res = realloc(res, (i + 1) * sizeof(*res));
+        res[i] = c;
+        i++;
+    }
+    res = realloc(res, (i + 1) * sizeof(*res));
+    res[i] = '\0';
+
+    close(outpipefd[0]);
+
+    return res;
 }
+
 
