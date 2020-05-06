@@ -4,8 +4,6 @@
 #include "programhandler.h"
 #include <unistd.h>
 #include <sys/wait.h>
-#include <sys/prctl.h>
-#include <signal.h>
 
 // returns an int that represents the
 // extension of the program file
@@ -52,7 +50,7 @@ char * get_program_stdout(char * program_path, prog_extn ext,
 char * handle_python_program(char * program_path, char * input)
 {
     fprintf(stdout, "Getting program results\n");
-    pid_t pid = 0; 
+    pid_t pid; 
     int inpipefd[2];
     int outpipefd[2];
     pipe(inpipefd);
@@ -60,29 +58,44 @@ char * handle_python_program(char * program_path, char * input)
     pid = fork();
 
     if(pid < 0){ fprintf(stdout, "Forking failed"); exit(EXIT_FAILURE); }
+
     else if(pid == 0)
     {
         // Child
-        dup2(outpipefd[0], STDIN_FILENO);
-        dup2(inpipefd[1], STDOUT_FILENO);
+        close(inpipefd[1]);
+        close(outpipefd[0]);
+        dup2(outpipefd[1], STDOUT_FILENO);
+        dup2(inpipefd[0], STDIN_FILENO);
+        waitpid(inpipefd[0], NULL, 0);
 
-        execl("python3", program_path, (char *) NULL);
+        execlp("python3", "python3", program_path, NULL);
 
-        exit(EXIT_FAILURE);
+        exit(EXIT_SUCCESS);
     }
-
-    close(outpipefd[0]);
-    close(inpipefd[1]);
-    
-    write(outpipefd[1], input, strlen(input));
-    wait(NULL);
-    char * res = malloc(BUFSIZ * sizeof(*res));
-    
-    read(inpipefd[0], &res, BUFSIZ);
 
     close(outpipefd[1]);
     close(inpipefd[0]);
-    kill(pid, SIGKILL);
+    
+    write(inpipefd[1], input, strlen(input) + 1);
+    close(inpipefd[1]);
+    waitpid(pid, NULL, 0);
+
+    char * res = malloc(sizeof(*res));
+    char c;
+    int i = 0;
+    
+    while(read(outpipefd[0], &c, 1) > 0)
+    {
+        if(c == '\r')
+            c = '\n';
+        res = realloc(res, (i + 1) * sizeof(*res));
+        res[i] = c;
+        i++;
+    }
+    res = realloc(res, (i + 1) * sizeof(*res));
+    res[i] = '\0';
+
+    close(outpipefd[0]);
 
     return res;
 }
