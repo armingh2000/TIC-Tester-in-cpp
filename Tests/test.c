@@ -60,10 +60,8 @@ void find_file_extension_test()
 void handle_python_program_test()
 {
      char fp1[] = { "./tests_dir/python_test.py" };
-     fprintf(stdout, "test --\n");
      char * res1 = handle_python_program(fp1, " ");
-     fprintf(stdout, res1);
-     fprintf(stdout, "test --\n");
+     assert(strcmp(res1, "REACHED PYTHON !\n") == 0);
 }
 
 int main(int argc, char ** argv)
@@ -81,7 +79,7 @@ int main(int argc, char ** argv)
     {
         int func_nums = 4;
         char * func_names[] = { "read_file", "free_read_file", 
-            "find_file_extension", "handle_python_file" };
+            "find_file_extension", "handle_python_program" };
         void (*funcs[])() = { &read_file_test, &free_read_file_test,
             &find_file_extension_test, &handle_python_program_test };
 
@@ -95,11 +93,11 @@ int main(int argc, char ** argv)
     else if(*opt == '2')
     {
         fprintf(stdout, "If you want to run a test write y, everything else will be considered as no\n\n");
-        int func_nums = 3;
+        int func_nums = 4;
         char * func_names[] = { "read_file", "free_read_file", 
-            "find_file_extension" };
+            "find_file_extension", "handle_python_program" };
         void (*funcs[])() = { &read_file_test, &free_read_file_test,
-            &find_file_extension_test };
+            &find_file_extension_test, &handle_python_program_test };
         char * line = NULL;
         size_t line_sz;
 
