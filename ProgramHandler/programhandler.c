@@ -92,6 +92,8 @@ char * handle_python_program(char * program_path, char * input)
         res[i] = c;
         i++;
     }
+    if(i == 0)
+        return NULL;
     res = realloc(res, (i + 1) * sizeof(*res));
     res[i] = '\0';
 
