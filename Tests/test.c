@@ -59,9 +59,21 @@ void find_file_extension_test()
 
 void handle_python_program_test()
 {
-     char fp1[] = { "./tests_dir/python_test.py" };
-     char * res1 = handle_python_program(fp1, " ");
-     assert(strcmp(res1, "REACHED PYTHON !\n") == 0);
+     char fp1[] = { "./tests_dir/python_test1.py" };
+     char * res1 = handle_python_program(fp1, "STDIN CHECK");
+     assert(strcmp(res1, "STDIN CHECK") == 0);
+     free(res1);
+
+     char fp2[] = { "./tests_dir/python_test2.py" };
+     char * res2 = handle_python_program(fp2, "STDOUT CHECK");
+     assert(strcmp(res2, "STDOUT CHECK") == 0);
+     free(res2);
+
+     char fp3[] = { "./tests_dir/python_test3.py" };
+     char * res3 = handle_python_program(fp3, "");
+     assert(res3 == NULL);
+
+
 }
 
 int main(int argc, char ** argv)
