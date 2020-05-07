@@ -32,6 +32,8 @@ prog_extn find_file_extension(char * file_name)
         return NOT_SUPPORTED;
 }
 
+// gets the program stdout in according 
+// to it's extension
 char * get_program_stdout(char * program_path, prog_extn ext, 
         char * input)
 {
@@ -47,6 +49,10 @@ char * get_program_stdout(char * program_path, prog_extn ext,
     return res;
 }
 
+// gives the input string to child
+// process by the pipe and gets the
+// output through another pipe
+// and returns it
 char * handle_python_program(char * program_path, char * input)
 {
     fprintf(stdout, "Getting program results\n");
