@@ -32,6 +32,8 @@ prog_extn find_file_extension(char * file_name)
         return NOT_SUPPORTED;
 }
 
+// gets the program stdout in according 
+// to it's extension
 char * get_program_stdout(char * program_path, prog_extn ext, 
         char * input)
 {
@@ -39,7 +41,7 @@ char * get_program_stdout(char * program_path, prog_extn ext,
     switch(ext)
     {
         case PYTHON:
-            res = handle_python_program(program_path, input);
+            res = handle_program("python3", program_path, input);
             break;
         default:
             return res;
@@ -47,7 +49,11 @@ char * get_program_stdout(char * program_path, prog_extn ext,
     return res;
 }
 
-char * handle_python_program(char * program_path, char * input)
+// gives the input string to child
+// process by the pipe and gets the
+// output through another pipe
+// and returns it
+char * handle_program(char * path_variable, char * program_path, char * input)
 {
     fprintf(stdout, "Getting program results\n");
     pid_t pid; 
@@ -68,7 +74,7 @@ char * handle_python_program(char * program_path, char * input)
         dup2(inpipefd[0], STDIN_FILENO);
         waitpid(inpipefd[0], NULL, 0);
 
-        execlp("python3", "python3", program_path, NULL);
+        execlp(path_variable, path_variable, program_path, NULL);
 
         exit(EXIT_SUCCESS);
     }
