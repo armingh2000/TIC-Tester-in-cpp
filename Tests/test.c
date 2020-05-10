@@ -49,11 +49,11 @@ void free_read_file_test()
 void find_file_extension_test()
 {
     // test 1
-    char fp1[] = { "./tests_dir/prog1.c" }; 
-    assert(find_file_extension(fp1) == C);
+    char fp1[] = { "./tests_dir/prog1.py" }; 
+    assert(find_program_extension(fp1) == PYTHON);
 
     char fp2[] = { "./tests_dir/prog2.F" };
-    assert(find_file_extension(fp2) == NOT_SUPPORTED);
+    assert(find_program_extension(fp2) == NOT_SUPPORTED);
 
 }
 
@@ -72,8 +72,13 @@ void handle_python_program_test()
      char fp3[] = { "./tests_dir/python_test3.py" };
      char * res3 = get_program_stdout(fp3, PYTHON, "");
      assert(res3 == NULL);
+}
 
-
+void handle_executable_program_test()
+{
+    char fp1[] = { "./tests_dir/executable_test1" };
+    char * res1 = get_program_stdout(fp1, EXECUTABLE, "");
+    fprintf(stdout, res1);
 }
 
 int main(int argc, char ** argv)
@@ -89,11 +94,14 @@ int main(int argc, char ** argv)
 
     if(*opt == '1')
     {
-        int func_nums = 4;
+        int func_nums = 5;
         char * func_names[] = { "read_file", "free_read_file", 
-            "find_file_extension", "handle_python_program" };
+            "find_file_extension", "handle_python_program", 
+            "handle_executable_program" };
+
         void (*funcs[])() = { &read_file_test, &free_read_file_test,
-            &find_file_extension_test, &handle_python_program_test };
+            &find_file_extension_test, &handle_python_program_test,
+            &handle_executable_program_test };
 
         for(int i = 0; i < func_nums; i++)
         {

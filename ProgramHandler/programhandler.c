@@ -4,32 +4,44 @@
 #include "programhandler.h"
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 // returns an int that represents the
 // extension of the program file
-prog_extn find_file_extension(char * file_name)
+prog_extn find_program_extension(char * program_path)
 {
-    char * point_place = strrchr(file_name, '.');
-    if(strcmp(point_place, ".c") == 0)
-        return C;
-
-    else if(strcmp(point_place, ".cpp") == 0)
-        return CPP;
-
-    else if(strcmp(point_place, ".cs") == 0)
-        return CS;
-
-    else if(strcmp(point_place, ".py") == 0)
+    char * point_place = strrchr(program_path, '.');
+    if(strcmp(point_place, ".py") == 0)
         return PYTHON;
 
     else if(strcmp(point_place, ".java") == 0)
         return JAVA;
 
-    else if(strcmp(point_place, ".exe") == 0)
-        return 2;
-
     else
-        return NOT_SUPPORTED;
+    {
+        struct stat buf;
+        if(stat(program_path, &buf) != 0)
+        {
+            return NOT_SUPPORTED;
+        }
+
+        // Executable
+        else
+        {
+            // Check the `st_mode` field to see if the `S_IXUSR` bit is set
+            if(buf.st_mode & S_IXUSR)
+            {
+                // Executable by user
+                return EXECUTABLE;
+            }
+            else
+            {
+                return USERPROBLEM;
+            }
+        }
+
+    }
 }
 
 // gets the program stdout in according 
@@ -43,8 +55,11 @@ char * get_program_stdout(char * program_path, prog_extn ext,
         case PYTHON:
             res = handle_program("python3", program_path, input);
             break;
+        case JAVA:
+            res = handle_program("javac", program_path, input);
+            break;
         default:
-            return res;
+            res = handle_program(program_path, program_path, input);
     }
     return res;
 }
