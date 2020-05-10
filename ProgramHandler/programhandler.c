@@ -15,7 +15,7 @@ prog_extn find_program_extension(char * program_path)
     if(strcmp(point_place, ".py") == 0)
         return PYTHON;
 
-    else if(strcmp(point_place, ".java") == 0)
+    else if(strcmp(point_place, ".class") == 0)
         return JAVA;
 
     else
@@ -56,7 +56,7 @@ char * get_program_stdout(char * program_path, prog_extn ext,
             res = handle_program("python3", program_path, input);
             break;
         case JAVA:
-            res = handle_program("javac", program_path, input);
+            res = handle_program("java", program_path, input);
             break;
         default:
             res = handle_program(program_path, program_path, input);
