@@ -78,7 +78,21 @@ void handle_executable_program_test()
 {
     char fp1[] = { "./tests_dir/executable_test1" };
     char * res1 = get_program_stdout(fp1, EXECUTABLE, "");
-    fprintf(stdout, res1);
+    assert(strcmp(res1, "This is C code\n") == 0);
+    free(res1);
+
+    char fp2[] = { "./tests_dir/executable_test2" };
+    char * res2 = get_program_stdout(fp2, EXECUTABLE, "TEST INPUT");
+    assert(strcmp(res2, "you wrote TEST INPUT") == 0);
+    free(res2);
+}
+
+void handle_java_program_test()
+{
+    char fp1[] = { "./tests_dir/Simple" };
+    char * res1 = get_program_stdout(fp1, JAVA, "");
+    printf("%s", res1);
+    free(res1);
 }
 
 int main(int argc, char ** argv)
@@ -94,14 +108,14 @@ int main(int argc, char ** argv)
 
     if(*opt == '1')
     {
-        int func_nums = 5;
+        int func_nums = 6;
         char * func_names[] = { "read_file", "free_read_file", 
             "find_file_extension", "handle_python_program", 
-            "handle_executable_program" };
+            "handle_executable_program", "handle_java_prgoram" };
 
         void (*funcs[])() = { &read_file_test, &free_read_file_test,
             &find_file_extension_test, &handle_python_program_test,
-            &handle_executable_program_test };
+            &handle_executable_program_test, &handle_java_program_test };
 
         for(int i = 0; i < func_nums; i++)
         {
@@ -113,11 +127,14 @@ int main(int argc, char ** argv)
     else if(*opt == '2')
     {
         fprintf(stdout, "If you want to run a test write y, everything else will be considered as no\n\n");
-        int func_nums = 4;
+        int func_nums = 5;
         char * func_names[] = { "read_file", "free_read_file", 
-            "find_file_extension", "handle_python_program" };
+            "find_file_extension", "handle_python_program", 
+            "handle_executable_program" };
+
         void (*funcs[])() = { &read_file_test, &free_read_file_test,
-            &find_file_extension_test, &handle_python_program_test };
+            &find_file_extension_test, &handle_python_program_test,
+            &handle_executable_program_test };
         char * line = NULL;
         size_t line_sz;
 
@@ -142,6 +159,7 @@ int main(int argc, char ** argv)
         free(line);
     }
 
+    free(opt);
     return EXIT_SUCCESS;
 }
 

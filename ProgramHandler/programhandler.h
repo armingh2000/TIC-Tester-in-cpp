@@ -2,7 +2,6 @@ typedef enum {
     PYTHON,
     JAVA,
     EXECUTABLE,
-    USERPROBLEM,
     NOT_SUPPORTED
 } prog_extn;
 
