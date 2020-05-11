@@ -55,8 +55,11 @@ char * get_program_stdout(char * program_path, prog_extn ext,
         case PYTHON:
             res = handle_program("python3", program_path, input);
             break;
+        case JAVA:
+            res = handle_program("javac", program_path, input);
+            break;
         default:
-            return res;
+            res = handle_program(program_path, program_path, input);
     }
     return res;
 }
