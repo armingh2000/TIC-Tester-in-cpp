@@ -10,4 +10,4 @@ typedef enum {
 
 prog_extn find_file_extension(char * file_name);
 char * get_program_stdout(char * program_path, prog_extn ext, char * input);
-char * handle_python_program(char * program_path, char * input);
+char * handle_program(char * path_variable, char * program_path, char * input);
