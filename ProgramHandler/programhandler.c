@@ -4,23 +4,44 @@
 #include "programhandler.h"
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 // returns an int that represents the
 // extension of the program file
-prog_extn find_file_extension(char * file_name)
+prog_extn find_file_extension(char * program_path)
 {
-    char * point_place = strrchr(file_name, '.');
+    char * point_place = strrchr(program_path, '.');
     if(strcmp(point_place, ".py") == 0)
         return PYTHON;
 
     else if(strcmp(point_place, ".java") == 0)
         return JAVA;
 
-    else if(strcmp(point_place, ".exe") == 0)
-        return EXECUTABLE;
-
     else
-        return NOT_SUPPORTED;
+    {
+        struct stat buf;
+        if(stat(program_path, &buf) != 0)
+        {
+            return NOT_SUPPORTED;
+        }
+
+        // Executable
+        else
+        {
+            // Check the `st_mode` field to see if the `S_IXUSR` bit is set
+            if(buf.st_mode & S_IXUSR)
+            {
+                // Executable by user
+                return EXECUTABLE;
+            }
+            else
+            {
+                return USERPROBLEM;
+            }
+        }
+
+    }
 }
 
 // gets the program stdout in according 
