@@ -9,7 +9,7 @@
 
 // returns an int that represents the
 // extension of the program file
-prog_extn find_file_extension(char * program_path)
+prog_extn find_program_extension(char * program_path)
 {
     char * point_place = strrchr(program_path, '.');
     if(strcmp(point_place, ".py") == 0)
