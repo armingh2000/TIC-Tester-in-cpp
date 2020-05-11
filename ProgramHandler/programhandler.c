@@ -10,23 +10,14 @@
 prog_extn find_file_extension(char * file_name)
 {
     char * point_place = strrchr(file_name, '.');
-    if(strcmp(point_place, ".c") == 0)
-        return C;
-
-    else if(strcmp(point_place, ".cpp") == 0)
-        return CPP;
-
-    else if(strcmp(point_place, ".cs") == 0)
-        return CS;
-
-    else if(strcmp(point_place, ".py") == 0)
+    if(strcmp(point_place, ".py") == 0)
         return PYTHON;
 
     else if(strcmp(point_place, ".java") == 0)
         return JAVA;
 
     else if(strcmp(point_place, ".exe") == 0)
-        return 2;
+        return EXECUTABLE;
 
     else
         return NOT_SUPPORTED;

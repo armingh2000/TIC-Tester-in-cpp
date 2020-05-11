@@ -1,10 +1,7 @@
 typedef enum {
-    C,
-    CPP,
-    CS,
     PYTHON,
     JAVA,
-    EXE,
+    EXECUTABLE,
     NOT_SUPPORTED
 } prog_extn;
 
