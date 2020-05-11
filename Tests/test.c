@@ -49,8 +49,8 @@ void free_read_file_test()
 void find_file_extension_test()
 {
     // test 1
-    char fp1[] = { "./tests_dir/prog1.c" }; 
-    assert(find_file_extension(fp1) == C);
+    char fp1[] = { "./tests_dir/prog1.py" }; 
+    assert(find_file_extension(fp1) == PYTHON);
 
     char fp2[] = { "./tests_dir/prog2.F" };
     assert(find_file_extension(fp2) == NOT_SUPPORTED);
