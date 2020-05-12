@@ -54,17 +54,27 @@ char * get_program_stdout(char * program_path, prog_extn ext,
     switch(ext)
     {
         case PYTHON:
+            {
             res = handle_program("python3", program_path, input);
             break;
+            }
         case JAVA:
-            ;
-            char * temp = "-classpath ";
-            strcat(temp, program_path);
+            {
+            char ** split = split_program_path(program_path);
+            char temp[strlen(split[0]) + strlen(split[1]) + 1 + 11 + 1];
+            strcpy(temp, "-classpath ");
+            strcat(temp, split[1]);
+            strcat(temp, " ");
+            strcat(temp, split[0]);
 
             res = handle_program("java", temp, input);
             break;
+            }
         default:
+            {
             res = handle_program(program_path, program_path, input);
+            break;
+            }
     }
     return res;
 }
@@ -83,10 +93,10 @@ char ** split_program_path(char * program_path)
     program_directory[l + 1] = '\0';
 
     char ** res = malloc(2 * sizeof(*res));
-    res[0] = malloc((strlen(program_name)  + 1) * sizeof(res[0]));
+    res[0] = malloc((strlen(program_name)  + 1) * sizeof(*(res[0])));
     strncpy(res[0], program_name, strlen(program_name));
     res[0][strlen(program_name)] = '\0';
-    res[1] = malloc((strlen(program_directory)  + 1) * sizeof(res[1]));
+    res[1] = malloc(strlen(program_directory) * sizeof(*(res[1])));
     strncpy(res[1], program_directory, strlen(program_directory));
     res[1][strlen(program_directory)] = '\0';
 

@@ -95,6 +95,23 @@ void handle_java_program_test()
     free(res1);
 }
 
+void split_program_path_test(char * program_path)
+{
+    char * test1 = "./tests_dir/Simple.class";
+    char ** res1 = split_program_path(test1);
+    assert(strcmp(res1[0], "Simple.class") == 0);
+    assert(strcmp(res1[1], "./tests_dir/") == 0);
+    free_read_file(res1, 2);
+
+    char * test2 = "./temp.test";
+    char ** res2 = split_program_path(test2);
+    //printf("%s\n", res2[0]);
+    //printf("%s\n", res2[1]);
+    assert(strcmp(res2[0], "temp.test") == 0);
+    assert(strcmp(res2[1], "./") == 0);
+    free_read_file(res2, 2);
+}
+
 int main(int argc, char ** argv)
 {
     fprintf(stdout, "Two options availabe :\n");
@@ -108,14 +125,16 @@ int main(int argc, char ** argv)
 
     if(*opt == '1')
     {
-        int func_nums = 6;
+        int func_nums = 7;
         char * func_names[] = { "read_file", "free_read_file", 
             "find_file_extension", "handle_python_program", 
-            "handle_executable_program", "handle_java_prgoram" };
+            "handle_executable_program", "handle_java_prgoram",
+            "split_program_path" };
 
         void (*funcs[])() = { &read_file_test, &free_read_file_test,
             &find_file_extension_test, &handle_python_program_test,
-            &handle_executable_program_test, &handle_java_program_test };
+            &handle_executable_program_test, &handle_java_program_test, 
+            &split_program_path_test };
 
         for(int i = 0; i < func_nums; i++)
         {
