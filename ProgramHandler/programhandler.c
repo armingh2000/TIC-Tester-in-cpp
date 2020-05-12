@@ -37,7 +37,8 @@ prog_extn find_program_extension(char * program_path)
             }
             else
             {
-                return USERPROBLEM;
+                fprintf(stdout, "Looks like this user doesn't have permission to access the program");
+                exit(EXIT_FAILURE);
             }
         }
 
@@ -56,11 +57,39 @@ char * get_program_stdout(char * program_path, prog_extn ext,
             res = handle_program("python3", program_path, input);
             break;
         case JAVA:
-            res = handle_program("java", program_path, input);
+            ;
+            char * temp = "-classpath ";
+            strcat(temp, program_path);
+
+            res = handle_program("java", temp, input);
             break;
         default:
             res = handle_program(program_path, program_path, input);
     }
+    return res;
+}
+
+char ** split_program_path(char * program_path)
+{
+    char * program_name = &(strrchr(program_path, '/')[1]); 
+
+    int l = strlen(program_path) - 1;
+    while((l >= 0) && (program_path[l] != '/'))
+    {
+        l--;
+    }
+    char program_directory[l + 2];
+    strncpy(program_directory, program_path, l + 1);
+    program_directory[l + 1] = '\0';
+
+    char ** res = malloc(2 * sizeof(*res));
+    res[0] = malloc((strlen(program_name)  + 1) * sizeof(res[0]));
+    strncpy(res[0], program_name, strlen(program_name));
+    res[0][strlen(program_name)] = '\0';
+    res[1] = malloc((strlen(program_directory)  + 1) * sizeof(res[1]));
+    strncpy(res[1], program_directory, strlen(program_directory));
+    res[1][strlen(program_directory)] = '\0';
+
     return res;
 }
 
