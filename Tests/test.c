@@ -87,7 +87,13 @@ void handle_executable_program_test()
     free(res2);
 }
 
-
+void handle_java_program_test()
+{
+    char fp1[] = { "./tests_dir/Simple" };
+    char * res1 = get_program_stdout(fp1, JAVA, "");
+    printf("%s", res1);
+    free(res1);
+}
 
 int main(int argc, char ** argv)
 {
@@ -102,14 +108,14 @@ int main(int argc, char ** argv)
 
     if(*opt == '1')
     {
-        int func_nums = 5;
+        int func_nums = 6;
         char * func_names[] = { "read_file", "free_read_file", 
             "find_file_extension", "handle_python_program", 
-            "handle_executable_program" };
+            "handle_executable_program", "handle_java_prgoram" };
 
         void (*funcs[])() = { &read_file_test, &free_read_file_test,
             &find_file_extension_test, &handle_python_program_test,
-            &handle_executable_program_test };
+            &handle_executable_program_test, &handle_java_program_test };
 
         for(int i = 0; i < func_nums; i++)
         {
