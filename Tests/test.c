@@ -85,7 +85,6 @@ void handle_executable_program_test()
     char * res2 = get_program_stdout(fp2, EXECUTABLE, "TEST INPUT");
     assert(strcmp(res2, "you wrote TEST INPUT") == 0);
     free(res2);
-
 }
 
 
@@ -151,6 +150,7 @@ int main(int argc, char ** argv)
         free(line);
     }
 
+    free(opt);
     return EXIT_SUCCESS;
 }
 

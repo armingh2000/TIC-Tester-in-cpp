@@ -114,11 +114,15 @@ char * handle_program(char * path_variable, char * program_path, char * input)
         i++;
     }
     if(i == 0)
+    {
+        free(res);
         return NULL;
+    }
     res = realloc(res, (i + 1) * sizeof(*res));
     res[i] = '\0';
 
     close(outpipefd[0]);
+    kill(pid, SIGKILL);
 
     return res;
 }
