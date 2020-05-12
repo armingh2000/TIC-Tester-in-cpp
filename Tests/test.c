@@ -78,8 +78,17 @@ void handle_executable_program_test()
 {
     char fp1[] = { "./tests_dir/executable_test1" };
     char * res1 = get_program_stdout(fp1, EXECUTABLE, "");
-    fprintf(stdout, res1);
+    assert(strcmp(res1, "This is C code\n") == 0);
+    free(res1);
+
+    char fp2[] = { "./tests_dir/executable_test2" };
+    char * res2 = get_program_stdout(fp2, EXECUTABLE, "TEST INPUT");
+    assert(strcmp(res2, "you wrote TEST INPUT") == 0);
+    free(res2);
+
 }
+
+
 
 int main(int argc, char ** argv)
 {
