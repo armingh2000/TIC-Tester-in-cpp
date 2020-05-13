@@ -89,10 +89,10 @@ void handle_executable_program_test()
 
 void handle_java_program_test()
 {
-    //char fp1[] = { "./tests_dir/Simple" };
-    //char * res1 = get_program_stdout(fp1, JAVA, "");
-    //printf("%s", res1);
-    //free(res1);
+    char fp1[] = { "./tests_dir/Simple" };
+    char * res1 = get_program_stdout(fp1, JAVA, "");
+    printf("%s", res1);
+    free(res1);
 }
 
 void split_program_path_test(char * program_path)
