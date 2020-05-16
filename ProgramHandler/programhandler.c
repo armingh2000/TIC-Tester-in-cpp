@@ -60,14 +60,16 @@ char * get_program_stdout(char * program_path, prog_extn ext,
             }
         case JAVA:
             {
-            char ** split = split_program_path(program_path);
-            char temp[strlen(split[0]) + strlen(split[1]) + 1 + 11 + 1];
-            strcpy(temp, "-classpath ");
-            strcat(temp, split[1]);
-            strcat(temp, " ");
-            strcat(temp, split[0]);
+            //char ** split = split_program_path(program_path);
+            //char temp[strlen(split[0]) + strlen(split[1]) + 1 + 11 + 1];
+            //strcpy(temp, "-cp ");
+            //char temp[strlen(split[0]) + strlen(split[1]) + 1];
 
-            res = handle_program("java", temp, input);
+            //strcat(temp, split[1]);
+            //strcat(temp, ",");
+            //strcat(temp, split[0]);
+
+            res = handle_program("java", program_path, input);
             break;
             }
         default:
@@ -128,7 +130,15 @@ char * handle_program(char * path_variable, char * program_path, char * input)
         dup2(inpipefd[0], STDIN_FILENO);
         waitpid(inpipefd[0], NULL, 0);
 
-        execlp(path_variable, path_variable, program_path, NULL);
+        if(strcmp(path_variable, "java") != 0)
+            execlp(path_variable, path_variable, program_path, NULL);
+        else
+        {
+            char ** temp = split_program_path(program_path);
+
+            execlp(path_variable, path_variable, "-classpath", temp[1], temp[0], NULL);
+        }
+
 
         exit(EXIT_SUCCESS);
     }
