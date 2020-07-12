@@ -1,1 +1,0 @@
-print("STDOUT CHECK", end="")
